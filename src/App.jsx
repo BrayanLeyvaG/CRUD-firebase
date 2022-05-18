@@ -6,11 +6,13 @@ import firebaseApp from './firebase/firebaseConfig'
 import { async } from '@firebase/util'
 import FormPost from './components/FormPost'
 import Navbar from './components/Navbar'
+import { Button, Container } from '@mui/material'
 
 function App() {
   const [posts, setPosts] = useState([])
   const firestore = getFirestore(firebaseApp)
   const [editPost, setEditPost] = useState(null)
+  const [newPost, setNewPost] = useState(false)
 
   const postsCollection = collection(firestore, "posts")
 
@@ -22,13 +24,15 @@ function App() {
   useEffect(() => {
     getPosts()
   }, [])
-  
 
   return (
     <div className="App">
       <Navbar/>
-      <FormPost postsCollection={postsCollection} getPosts={getPosts} editPost={editPost} setEditPost={setEditPost}/>
-      <Posts postList={posts} getPosts={getPosts} setEditPost={setEditPost}/>
+      <Container sx={{display: "flex", flexDirection:"column", alignItems:'center', marginTop: 4}}>
+      <Button variant="contained" onClick={() => setNewPost(!newPost)}>New post</Button>
+        {newPost && <FormPost postsCollection={postsCollection} getPosts={getPosts} editPost={editPost} setEditPost={setEditPost}/>}
+        <Posts postList={posts} getPosts={getPosts} setEditPost={setEditPost}/>
+      </Container>
     </div>
   )
 }

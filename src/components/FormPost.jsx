@@ -4,6 +4,8 @@ import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from 'firebase
 import React, { useEffect, useState } from 'react'
 import firebaseApp, { firebaseStorage } from '../firebase/firebaseConfig'
 import Button from '@mui/material/Button'
+import { TextField, Typography } from '@mui/material'
+import { Box } from '@mui/system'
 
 const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
   const [title, setTitle] = useState("")
@@ -62,28 +64,36 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
   }, [editPost])
   
 
-
   return (
-    <form onSubmit={editPost? updatePost : addPost}>
-      <input
-        type="file"
-        onChange={e => setFileUpload(e.target.files[0])}
-      />
-      <input
+    <Box component="form" onSubmit={editPost? updatePost : addPost} sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
+      <Box>
+        <Button variant="outlined" component="label">
+          <input
+            type="file"
+            hidden
+            onChange={e => setFileUpload(e.target.files[0])}
+          />
+          Upload Image
+        </Button>
+        <Typography variant="body2" color="text.secondary">{fileUpload? `${fileUpload.name}` : ""}</Typography>
+      </Box>
+      <TextField
+        label="Title"
+        variant="outlined"
         type="text"
         value={title}
         onChange={e => setTitle(e.target.value)}
-        placeholder="Title"
       />
-      <input
+      <TextField
+        label="Description"
+        variant="outlined"
         type="text"
         value={description}
         onChange={e => setDescription(e.target.value)}
-        placeholder="Description"
         />
-      <button type='submit'>{editPost? "Update" : "Post"}</button>
+      <Button type='submit' variant="contained">{editPost? "Update" : "Post"}</Button>
       
-    </form>
+    </Box>
   )
 }
 
