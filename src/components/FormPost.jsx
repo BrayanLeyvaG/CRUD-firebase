@@ -6,8 +6,10 @@ import firebaseApp, { firebaseStorage } from '../firebase/firebaseConfig'
 import Button from '@mui/material/Button'
 import { TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
-const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
+const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost, newPost}) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [fileUpload, setFileUpload] = useState("")
@@ -63,36 +65,66 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
     editingPost()
   }, [editPost])
   
-
+  const modalBg = {
+    width: "100vw",
+    height: "100vh",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+  const modalContainer = {
+    margin:"15px",
+    zIndex: "100",
+    width: "500px",
+    minHeight: "100px",
+    backgroundColor: "white",
+    position: "relative",
+    borderRadius: "5px",
+    boxShadow: "rgba(100,100,111,0.2) 0px 7px 29px 0px",
+    padding: "30px",
+  }
   return (
-    <Box component="form" onSubmit={editPost? updatePost : addPost} sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
-      <Box>
-        <Button variant="outlined" component="label">
-          <input
-            type="file"
-            hidden
-            onChange={e => setFileUpload(e.target.files[0])}
-          />
-          Upload Image
-        </Button>
-        <Typography variant="body2" color="text.secondary">{fileUpload? `${fileUpload.name}` : ""}</Typography>
-      </Box>
-      <TextField
-        label="Title"
-        variant="outlined"
-        type="text"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-      />
-      <TextField
-        label="Description"
-        variant="outlined"
-        type="text"
-        value={description}
-        onChange={e => setDescription(e.target.value)}
+    <Box sx={modalBg} onClick={() => setNewPost(!newPost)}>
+      <Box sx={modalContainer} >
+      <Box component="form" onSubmit={editPost? updatePost : addPost} sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
+        <Box sx={{width: "100%", display: "flex", justifyContent:"end"}}>
+          <IconButton onClick={() => setNewPost(!newPost)} aria-label="delete" size="large" color='primary'>
+                    <CloseIcon />
+          </IconButton>
+        </Box>
+        <Box>
+          <Button variant="outlined" component="label">
+            <input
+              type="file"
+              hidden
+              onChange={e => setFileUpload(e.target.files[0])}
+            />
+            Upload Image
+          </Button>
+          <Typography variant="body2" color="text.secondary">{fileUpload? `${fileUpload.name}` : ""}</Typography>
+        </Box>
+        <TextField
+          label="Title"
+          variant="outlined"
+          type="text"
+          value={title}
+          onChange={e => setTitle(e.target.value)}
         />
-      <Button type='submit' variant="contained">{editPost? "Update" : "Post"}</Button>
-      
+        <TextField
+          label="Description"
+          variant="outlined"
+          type="text"
+          value={description}
+          onChange={e => setDescription(e.target.value)}
+          />
+        <Button type='submit' variant="contained">{editPost? "Update" : "Post"}</Button>
+        
+      </Box>
+      </Box>
     </Box>
   )
 }

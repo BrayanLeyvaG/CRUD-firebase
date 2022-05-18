@@ -30,7 +30,7 @@ function App() {
       <Navbar/>
       <Container sx={{display: "flex", flexDirection:"column", alignItems:'center', marginTop: 4}}>
       <Button variant="contained" onClick={() => setNewPost(!newPost)}>New post</Button>
-        {newPost && <FormPost postsCollection={postsCollection} getPosts={getPosts} editPost={editPost} setEditPost={setEditPost}/>}
+        {newPost && <FormPost postsCollection={postsCollection} getPosts={getPosts} editPost={editPost} setEditPost={setEditPost} setNewPost={setNewPost} newPost={newPost}/>}
         <Posts postList={posts} getPosts={getPosts} setEditPost={setEditPost}/>
       </Container>
     </div>

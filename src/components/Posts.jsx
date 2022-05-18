@@ -27,7 +27,7 @@ const Posts = ({postList, getPosts, setEditPost}) => {
   return (
     <Box sx={{maxWidth: "1024px", display: "flex", flexDirection:"column", alignItems:'center', marginTop: 4}}>
       {postList.map(post => (
-        <Card sx={{ boxShadow: 3, maxWidth: 450, marginBottom:3, '@media (min-width:500px)': {minWidth: 450}}} key={post.id}>
+        <Card sx={{zIndex:"-10", boxShadow: 3, maxWidth: 450, marginBottom:3, '@media (min-width:500px)': {minWidth: 450}}} key={post.id}>
             <CardMedia
                 component="img"
                 alt={post.title}
