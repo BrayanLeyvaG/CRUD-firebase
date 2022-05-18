@@ -17,14 +17,14 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
 
   const inputsCleaned = () => {
     setTitle("")
-    setDescription("")
-    
+    setDescription("")    
   }
 
   const addPost = async(e) => {
     e.preventDefault()
     await addDoc( postsCollection, {Title: title, Description: description, url: fileUrl})
     inputsCleaned()
+    setNewPost(!newPost)
     getPosts()
   }
 
@@ -35,6 +35,7 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
     getPosts()
     inputsCleaned()
     setEditPost(null)
+    setNewPost(!newPost)
   }
 
   const editingPost = async(e) => {
@@ -42,7 +43,12 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
       setTitle(editPost.Title)
       setDescription(editPost.Description)
     }
-  
+  }
+
+  const closeForm = () => {
+    inputsCleaned()
+    setEditPost(null)
+    setNewPost(!newPost)
   }
 
 
@@ -66,6 +72,7 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
   }, [editPost])
   
   const modalBg = {
+    zIndex: "1400",
     width: "100vw",
     height: "100vh",
     position: "fixed",
@@ -78,7 +85,7 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
   }
   const modalContainer = {
     margin:"15px",
-    zIndex: "100",
+
     width: "500px",
     minHeight: "100px",
     backgroundColor: "white",
@@ -88,42 +95,42 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
     padding: "30px",
   }
   return (
-    <Box sx={modalBg} onClick={() => setNewPost(!newPost)}>
+    <Box sx={modalBg}>
       <Box sx={modalContainer} >
-      <Box component="form" onSubmit={editPost? updatePost : addPost} sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
         <Box sx={{width: "100%", display: "flex", justifyContent:"end"}}>
-          <IconButton onClick={() => setNewPost(!newPost)} aria-label="delete" size="large" color='primary'>
+          <IconButton onClick={() => closeForm()} aria-label="delete" size="large" color='primary'>
                     <CloseIcon />
           </IconButton>
         </Box>
-        <Box>
-          <Button variant="outlined" component="label">
-            <input
-              type="file"
-              hidden
-              onChange={e => setFileUpload(e.target.files[0])}
-            />
-            Upload Image
-          </Button>
-          <Typography variant="body2" color="text.secondary">{fileUpload? `${fileUpload.name}` : ""}</Typography>
-        </Box>
-        <TextField
-          label="Title"
-          variant="outlined"
-          type="text"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-        />
-        <TextField
-          label="Description"
-          variant="outlined"
-          type="text"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
+        <Box component="form" onSubmit={editPost? updatePost : addPost} sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
+          <Box sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:1}}>
+            <Button variant="outlined" component="label">
+              <input
+                type="file"
+                hidden
+                onChange={e => setFileUpload(e.target.files[0])}
+              />
+              Upload Image
+            </Button>
+            <Typography variant="body2" color="text.secondary">{fileUpload? `${fileUpload.name}` : ""}</Typography>
+          </Box>
+          <TextField
+            label="Title"
+            variant="outlined"
+            type="text"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
           />
-        <Button type='submit' variant="contained">{editPost? "Update" : "Post"}</Button>
-        
-      </Box>
+          <TextField
+            label="Description"
+            variant="outlined"
+            type="text"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            />
+          <Button type='submit' variant="contained">{editPost? "Update" : "Post"}</Button>
+          
+        </Box>
       </Box>
     </Box>
   )

@@ -14,7 +14,7 @@ import Favorite from '@mui/icons-material/Favorite';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const Posts = ({postList, getPosts, setEditPost}) => {
+const Posts = ({postList, getPosts, setEditPost, setNewPost, newPost}) => {
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
     const deletePost = async (id) => {
@@ -25,9 +25,9 @@ const Posts = ({postList, getPosts, setEditPost}) => {
 
 
   return (
-    <Box sx={{maxWidth: "1024px", display: "flex", flexDirection:"column", alignItems:'center', marginTop: 4}}>
+    <Box sx={{zIndex:"1000", maxWidth: "1024px", display: "flex", flexDirection:"column", alignItems:'center', marginTop: 4}}>
       {postList.map(post => (
-        <Card sx={{zIndex:"-10", boxShadow: 3, maxWidth: 450, marginBottom:3, '@media (min-width:500px)': {minWidth: 450}}} key={post.id}>
+        <Card sx={{boxShadow: 3, maxWidth: 450, marginBottom:3, '@media (min-width:500px)': {minWidth: 450}}} key={post.id}>
             <CardMedia
                 component="img"
                 alt={post.title}
@@ -46,7 +46,7 @@ const Posts = ({postList, getPosts, setEditPost}) => {
                 </Typography>
             </CardContent>
             <CardActions sx={{display:"flex", justifyContent:'end'}}>
-              <Button onClick={() => setEditPost(post)} variant="outlined">
+              <Button onClick={() => {setEditPost(post), setNewPost(!newPost)}} variant="outlined">
                   Edit
               </Button>
               <IconButton onClick={() => deletePost(post.id)} aria-label="delete" size="large" color='primary'>
