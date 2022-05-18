@@ -1,20 +1,25 @@
 import { async } from '@firebase/util'
 import { addDoc, doc, getFirestore, updateDoc } from 'firebase/firestore'
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage'
 import React, { useEffect, useState } from 'react'
-import firebaseApp from '../firebase/firebaseConfig'
+import firebaseApp, { firebaseStorage } from '../firebase/firebaseConfig'
+import Button from '@mui/material/Button'
 
 const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [fileUpload, setFileUpload] = useState("")
+  const [fileUrl, setFileUrl] = useState(null)
 
   const inputsCleaned = () => {
     setTitle("")
     setDescription("")
+    
   }
 
   const addPost = async(e) => {
     e.preventDefault()
-    await addDoc( postsCollection, {Title: title, Description: description})
+    await addDoc( postsCollection, {Title: title, Description: description, url: fileUrl})
     inputsCleaned()
     getPosts()
   }
@@ -22,21 +27,35 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
   const updatePost = async(e) => {
     e.preventDefault()
     const post = doc(getFirestore(firebaseApp), "posts", editPost.id)
-    await updateDoc( post, {Title: title, Description: description})
+    await updateDoc( post, {Title: title, Description: description, url: fileUrl})
     getPosts()
     inputsCleaned()
     setEditPost(null)
-
   }
 
   const editingPost = async(e) => {
     if (editPost) {
       setTitle(editPost.Title)
       setDescription(editPost.Description)
-      
     }
   
   }
+
+
+    useEffect(() => {
+      if (fileUpload){
+        const uploadingFile = async () => {
+          const fileRef = ref(firebaseStorage, `file/${fileUpload.name}`)
+          await uploadBytes(fileRef, fileUpload)
+          const urlDowload = await getDownloadURL(fileRef)
+          setFileUrl(urlDowload);        
+        }
+        uploadingFile()
+      }
+    }, [fileUpload])
+    
+
+  
 
   useEffect(() => {
     editingPost()
@@ -45,7 +64,11 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
 
 
   return (
-    <form onSubmit={editPost? updatePost:addPost}>
+    <form onSubmit={editPost? updatePost : addPost}>
+      <input
+        type="file"
+        onChange={e => setFileUpload(e.target.files[0])}
+      />
       <input
         type="text"
         value={title}
@@ -59,6 +82,7 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost}) => {
         placeholder="Description"
         />
       <button type='submit'>{editPost? "Update" : "Post"}</button>
+      
     </form>
   )
 }
