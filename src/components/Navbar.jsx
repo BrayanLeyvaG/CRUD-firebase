@@ -9,8 +9,8 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h4" component="div" fontWeight={900} sx={{ flexGrow: 1 }}>
-            Guugl -
+          <Typography variant="h4" component="div" fontWeight={600} sx={{ flexGrow: 1, fontFamily:"Dancing Script" }} >
+            Instagrom
           </Typography>
         </Toolbar>
       </AppBar>
