@@ -51,6 +51,11 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
     setNewPost(!newPost)
   }
 
+  const alertFile = (e) => {
+    e.preventDefault()
+    alert("You must upload an image")
+  }
+
 
     useEffect(() => {
       if (fileUpload){
@@ -64,7 +69,6 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
       }
     }, [fileUpload])
     
-
   
 
   useEffect(() => {
@@ -102,7 +106,7 @@ const FormPost = ({postsCollection, getPosts, editPost, setEditPost, setNewPost,
                     <CloseIcon />
           </IconButton>
         </Box>
-        <Box component="form" onSubmit={editPost? updatePost : addPost} sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
+        <Box component="form" onSubmit={fileUpload? (editPost? updatePost : addPost) : alertFile } sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:3}}>
           <Box sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:1}}>
             <Button variant="outlined" component="label">
               <input
